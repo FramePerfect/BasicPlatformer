@@ -5,11 +5,30 @@ using UnityEngine;
 
 public class GravSwapScript : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    private bool pickedUp;
+    private void Start()
     {
+        pickedUp = false;
+    }
+    
+    private void OnTriggerStay2D(Collider2D collision)
+    {   
         if(collision.gameObject.CompareTag("Player"))
         {
-            Destroy(this.gameObject);
+            if(Input.GetKeyDown(KeyCode.E) && !pickedUp)
+            {
+                gameObject.transform.SetParent(collision.gameObject.transform);
+                gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+                pickedUp = true;
+            }
+            else if(Input.GetKeyDown(KeyCode.E) && pickedUp)
+            {
+                gameObject.transform.SetParent(null);
+                gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+                pickedUp = false;
+            }
+            
         }
     }
+    
 }
