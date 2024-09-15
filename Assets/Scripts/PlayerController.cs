@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
         
         maxNumJumps = 1;
         numJumps = 1;
-        hasGravswap = false; // bool to enable powerup
+        hasGravswap = false; // bool to enable/disable powerup
         defaultColor = playerSpriteRenderer.color; //stores the default color for easy switching
 
     }
@@ -80,14 +80,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void GravSwap()     //GravSwap powerup code LShift lowers gravity lControl raises it and pressing neither resets it back to 2
+    private void GravSwap()     //GravSwap powerup code LShift lowers gravity capslock raises it and pressing neither resets it back to 2
     {
         if(hasGravswap && Input.GetKey(KeyCode.LeftShift))
         {
             playerRigidBody.gravityScale = 1;
             playerSpriteRenderer.color = Color.blue;
         }
-        else if(hasGravswap && Input.GetKey(KeyCode.LeftControl))
+        else if(hasGravswap && Input.GetKey(KeyCode.CapsLock))
         {
             playerRigidBody.gravityScale = 3;
             playerSpriteRenderer.color = Color.red;
