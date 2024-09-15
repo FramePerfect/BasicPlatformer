@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     private float inputHorizontal;
     private int maxNumJumps;
     private int numJumps;
+    private bool hasGravswap;
+    private SpriteRenderer playerSpriteRenderer;
+    private Color defaultColor;
 
     // Start is called before the first frame update
     void Start()
@@ -20,9 +23,12 @@ public class PlayerController : MonoBehaviour
         //becuase the rigidbody2d is attached to the player and this script
         //is also attached to the player. 
         playerRigidBody = GetComponent<Rigidbody2D>();
-
+        playerSpriteRenderer = GetComponent<SpriteRenderer>(); //needed to change player sprite color
+        
         maxNumJumps = 1;
         numJumps = 1;
+        hasGravswap = false; // bool to enable powerup
+        defaultColor = playerSpriteRenderer.color; //stores the default color for easy switching
 
     }
 
@@ -31,6 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         movePlayerLateral();
         jump();
+        GravSwap();
     }
 
     private void movePlayerLateral()
@@ -73,6 +80,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void GravSwap()     //GravSwap powerup code LShift lowers gravity lControl raises it and pressing neither resets it back to 2
+    {
+        if(hasGravswap && Input.GetKey(KeyCode.LeftShift))
+        {
+            playerRigidBody.gravityScale = 1;
+            playerSpriteRenderer.color = Color.blue;
+        }
+        else if(hasGravswap && Input.GetKey(KeyCode.LeftControl))
+        {
+            playerRigidBody.gravityScale = 3;
+            playerSpriteRenderer.color = Color.red;
+        }
+        else
+        {
+            playerRigidBody.gravityScale = 2;
+            playerSpriteRenderer.color = defaultColor;
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log(collision.gameObject);
@@ -92,6 +118,10 @@ public class PlayerController : MonoBehaviour
         {
             //restart the level
             SceneManager.LoadScene("Level01");
+        }
+        else if (collision.gameObject.CompareTag("GravSwap"))
+        {
+            hasGravswap = true;
         }
     }
 }
